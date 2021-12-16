@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <!-- Adapted from: https://threejs.org/docs/index.html#manual/en/introduction/Creating-a-scene -->
+  <title>My first 3D website with three.js!</title>
+  <style>
+    body {
+      margin: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <script src="js/three.js"></script>
+  <script>
+    ////////////////////////////////////////////////////////////////////////////////
+    // Create the scene to hold the 3D objects
+    const scene = new THREE.Scene();
+
+    // Create the camera to view the 3D objects
+    const camera = new THREE.PerspectiveCamera(
+      75,                                     // Frame of view
+      window.innerWidth / window.innerHeight, // Aspect ratio
+      0.1,                                    // Near clipping plane
+      1000                                    // Far clipping plane
+    );
+
+    // Create the renderer to draw the 3D objects in the browser.
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    // Add the drawn scene to the browser window
+    document.body.appendChild(renderer.domElement);
+
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // Create the Geometry (i.e. mathematical representation) of the 3D cube
+    const geometry = new THREE.BoxGeometry();
+
+    // NEW: Create the texture for the material based on custom images
+    // Note: The images are loaded in this order to match the position of the numbers on a die.
+    const material = new THREE.MeshFaceMaterial([
+      new THREE.MeshBasicMaterial({ map: THREE.ImageUtils.loadTexture('img/side_1.png') }),
+      new THREE.MeshBasicMaterial({ map: THREE.ImageUtils.loadTexture('img/side_6.png') }),
+      new THREE.MeshBasicMaterial({ map: THREE.ImageUtils.loadTexture('img/side_2.png') }),
+      new THREE.MeshBasicMaterial({ map: THREE.ImageUtils.loadTexture('img/side_5.png') }),
+      new THREE.MeshBasicMaterial({ map: THREE.ImageUtils.loadTexture('img/side_3.png') }),
+      new THREE.MeshBasicMaterial({ map: THREE.ImageUtils.loadTexture('img/side_4.png') }),
+    ]);
+
+    // Tie the Geometry and Material together with a Mesh
+    const cube = new THREE.Mesh(geometry, material);
+
+    // Add the Mesh to the Scene
+    scene.add(cube);
+
+    ////////////////////////////////////////////////////////////////////////
+    // Back up the camera so the cube is within the camera's view
+    // and add camera to the scene
+    camera.position.set(0, 0, 5);
+    scene.add(camera);
+    camera.lookAt(scene.position);
+    // Redraw the scene on the browser window to see the 3D cube
+    renderer.render(scene, camera);
+    var mouse = { x: 0, y: 0 };
+    var down = false;
+    function onMouseMove(event) {
+      event.preventDefault();
+      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+      // Make the sphere follow the mouse
+      var vector = new THREE.Vector3(mouse.x, mouse.y, 0.5);
+      vector.unproject(camera);
+      var dir = vector.sub(camera.position).normalize();
+      var distance = - camera.position.z / dir.z;
+      var pos = camera.position.clone().add(dir.multiplyScalar(distance));
+
+      var mouse3D = new THREE.Vector3((event.clientX / window.innerWidth) * 2 - 1,
+        -(event.clientY / window.innerHeight) * 2 + 1,
+        0.5);
+      //check for intersection with cube
+      var raycaster = new THREE.Raycaster();
+      raycaster.setFromCamera(mouse3D, camera);
+      var intersects = raycaster.intersectObject(cube);
+
+      if (intersects.length > 0) {
+        console.log(intersects[0]);
+        if (down) {
+          cube.position.copy(pos);
+        }
+      }
+
+
+      // Make the sphere follow the mouse
+      //   mouseMesh.position.set(event.clientX, event.clientY, 0);
+    };
+
+    document.addEventListener('mousemove', onMouseMove, false);
+    document.addEventListener('mousedown', function () {
+      down = true;
+    });
+    document.addEventListener('mouseup', function () {
+      down = false;
+    });
+    ////////////////////////////////////////////////////////////////////////////////
+    // Create the animation loop
+    function animate() {
+      // Set up the recurring call that powers the animation loop
+      requestAnimationFrame(animate);
+
+      // Change the rotation of the cube for one frame of animation
+      cube.rotation.x += 0.01;
+      cube.rotation.y += 0.01;
+
+      // Redraw the scene in the browser window
+      renderer.render(scene, camera);
+    }
+
+    // Start the animation loop
+    animate();
+  </script>
+</body>
+
+</html>
