@@ -1,6 +1,11 @@
 # THREE.js / WebGL Tutorial
 A demonstration of how to use 3D Web Graphics to re-create a classic screensaver, this time with a bouncing die.
 
+<!-- BADGES -->
+[![](https://badgen.net/github/license/thehale/threejs-dice-screensaver)](https://github.com/thehale/threejs-dice-screensaver/blob/master/LICENSE)
+[![](https://badgen.net/badge/icon/Sponsor/pink?icon=github&label)](https://github.com/sponsors/thehale)
+[![](https://badgen.net/badge/icon/Follow%20@jhaledev/1DA1F2?icon=twitter&label)](https://twitter.com/intent/user?screen_name=jhaledev)
+
 ![3D Dice Screensaver](./tutorial/images/final.gif)
 
 _Video Overview: https://youtu.be/K_Z1ZWucn-c_
@@ -11,7 +16,7 @@ Created by Jacob Janes, Joseph Hale, and Brent Watkins as part of an "Advanced T
 * [Learning Outcomes](#learning-outcomes)
 * [Learning Activities](#learning-activities)
 * [History](#history)
-* [Analysis](#analysis)
+* [Analysis](#analysis-and-future-outlook)
 * [References](#references)
 * [Resources](#resources)
 
